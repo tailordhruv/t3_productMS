@@ -3,6 +3,7 @@ package com.coviam.bookstore.productMS.Entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.context.annotation.Primary;
 
 import javax.persistence.Entity;
@@ -20,15 +21,16 @@ public class Product {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    String product_id;
-    String product_name;
-    String Genere;
+    String productId;
+    String productName;
+    String genre;
     String rating;
-    HashMap<String,String> Attributes;
+    HashMap<String,String> attributes;
     String description;
     String author;
     String url;
     String isbn;
+    String price;
 
 
 }

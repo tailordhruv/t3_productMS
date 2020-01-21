@@ -2,6 +2,7 @@ package com.coviam.bookstore.productMS.Controller;
 
 import com.coviam.bookstore.productMS.DTO.ProductDTO1;
 import com.coviam.bookstore.productMS.DTO.ProductDTO2;
+import com.coviam.bookstore.productMS.DTO.ProductDTO3;
 import com.coviam.bookstore.productMS.DTO.Product_Merchant_DTO;
 import com.coviam.bookstore.productMS.Entity.Product;
 import com.coviam.bookstore.productMS.Service.ProductService;
@@ -20,38 +21,35 @@ import java.util.Map;
 public class ProductController {
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
+
+
 
     /////////TODO       ADD KAFKA
     @PostMapping("/addProduct")
-    List<Product> addProduct(@RequestBody ProductDTO1 productDTO1){
+    String addProduct(@RequestBody ProductDTO1 productDTO1){
         Product product = new Product();
         BeanUtils.copyProperties(productDTO1,product);
-        return (ArrayList<Product>)productService.addProduct(product);
+        return productService.addProduct(product);
     }
 
 
     @DeleteMapping("/deleteProductById/{id}")
-    List<Product> deleteProductById(@PathVariable("id") String id){
-        return (ArrayList<Product>)productService.deleteProductById(id);
+    void deleteProductById(@PathVariable("id") String id){
+
+        productService.deleteProductById(id);
     }
 
 
-    @PostMapping("/updateProduct")             ////////////TODO How to Update
-    List<Product> updateProduct(@RequestBody ProductDTO1 productDTO1){
-        Product product = new Product();
-        BeanUtils.copyProperties(productDTO1,product);
-        return (ArrayList<Product>)productService.updateProduct(product);
-    }
 
-    @GetMapping("/getProductById/{id}")//////////TODO
-    ProductDTO2 getProductById(@PathVariable("id") String id){
+
+    @GetMapping("/getProductById/{id}")
+    ProductDTO1 getProductById(@PathVariable("id") String id){
+        System.out.println("called");
         Product product=productService.getProductById(id);
-        ProductDTO2 productDTO2=new ProductDTO2();
-        Product_Merchant_DTO product_merchant_dto=(new RestTemplate()).getForObject("http://localhost:8084/merchant/getProductMerchant/", Product_Merchant_DTO.class);
-        BeanUtils.copyProperties(product_merchant_dto,productDTO2);
-        BeanUtils.copyProperties(product,productDTO2);
-        return productDTO2;
+        ProductDTO1 productDTO1=new ProductDTO1();
+        BeanUtils.copyProperties(product,productDTO1);
+        return productDTO1;
     }
 
     @GetMapping("/getGenreList")
@@ -60,9 +58,16 @@ public class ProductController {
     }
 
     @GetMapping("/getProductByGenre/{genre}")
-    List<ProductDTO2> getProductByGenre(@PathVariable("genre") String genre){
-        ProductDTO2 productDTO2=new ProductDTO2();
-        productService.getProductByGenre(genre);
+    List<ProductDTO3> getProductByGenre(@PathVariable("genre") String genre){
+
+        List<Product> productList=productService.getProductByGenre(genre);
+        List<ProductDTO3> dto3List=new ArrayList<ProductDTO3>();
+        for(Product product:productList){
+            ProductDTO3 productDTO3=new ProductDTO3();
+            BeanUtils.copyProperties(product,productDTO3);
+            dto3List.add(productDTO3);
+        }
+        return dto3List;
     }
 
 }

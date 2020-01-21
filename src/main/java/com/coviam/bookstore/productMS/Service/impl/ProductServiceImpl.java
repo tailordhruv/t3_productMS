@@ -7,26 +7,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Override
-    public Iterable<Product> addProduct(Product product) {
-        productRepository.save(product);
-        return productRepository.findAll();
+    public String addProduct(Product product) {
+
+        return productRepository.save(product).getProductId();
     }
 
     @Override
-    public Iterable<Product> deleteProductById(String id) {
+    public void deleteProductById(String id) {
         productRepository.deleteById(id);
-        return productRepository.findAll();
+
     }
 
     @Override
@@ -37,11 +37,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(String id) {
-        return productRepository.findById(id).get();
+        System.out.println(id);
+        Optional<Product> o= productRepository.findById(id);
+        System.out.println(o);
+        return o.get();
     }
 
     @Override
-    public  getProductByGenre(String genre) {
+    public  ArrayList<Product> getProductByGenre(String genre)
+    {
+
+
+        List<Product> productList=(ArrayList<Product>)productRepository.findAll();
+        return (ArrayList<Product>) productList.stream().filter(product -> product.getGenre().equals(genre)).collect(Collectors.toList());
+
 
     }
 
@@ -49,6 +58,6 @@ public class ProductServiceImpl implements ProductService {
     public List<String> getGenre() {
 
         List<Product> listOfProduct = (ArrayList<Product>)productRepository.findAll();
-        return listOfProduct.stream().map(e -> e.getGenere()).distinct().collect(Collectors.toList());
+        return listOfProduct.stream().map(e -> e.getGenre()).distinct().collect(Collectors.toList());
     }
 }

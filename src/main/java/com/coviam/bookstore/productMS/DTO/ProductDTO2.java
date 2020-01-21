@@ -9,15 +9,15 @@ import java.util.HashMap;
 @Setter
 public class ProductDTO2 {
 
-    String product_id;
-    String product_name;
-    String Genere;
-    String rating;
-    HashMap<String,String> Attributes;
-    String description;
-    String author;
-    String url;
-    String isbn;
-    String price;
-    String quantity;
+    private String productId;
+    private String productName;
+    private String genre;
+    private String rating;
+    private  HashMap<String,String> attributes;
+    private  String description;
+    private String author;
+    private  String url;
+    private  String isbn;
+    private  String price;
+    private String quantity;
 }

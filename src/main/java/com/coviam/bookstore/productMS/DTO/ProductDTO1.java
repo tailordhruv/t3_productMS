@@ -8,14 +8,16 @@ import java.util.HashMap;
 @Getter
 @Setter
 public class ProductDTO1 {
-    String product_id;
-    String product_name;
-    String Genere;
-    String rating;
-    HashMap<String,String> Attributes;
-    String description;
-    String author;
-    String url;
-    String isbn;
+    private String productId;
+    private String productName;
+    private String genre;
+    private String rating;
+    private HashMap<String,String> attributes;
+    private  String description;
+    private  String author;
+    private  String url;
+    private  String isbn;
+    private String price;
+
 
 }

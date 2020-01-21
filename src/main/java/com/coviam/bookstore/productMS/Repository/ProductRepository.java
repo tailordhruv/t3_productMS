@@ -8,5 +8,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends CrudRepository<Product,String> {
 
+    List<Product> findByProductIdIn(List<String> productIds);
+
 
 }
