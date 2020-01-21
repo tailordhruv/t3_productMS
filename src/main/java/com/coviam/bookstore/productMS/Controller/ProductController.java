@@ -25,7 +25,7 @@ public class ProductController {
 
 
 
-    /////////TODO       ADD KAFKA
+    
     @PostMapping("/addProduct")
     String addProduct(@RequestBody ProductDTO1 productDTO1){
         Product product = new Product();
