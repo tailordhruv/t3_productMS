@@ -1,10 +1,8 @@
-package com.coviam.bookstore.productMS.Entity;
+package com.coviam.bookstore.productMS.entity;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-import org.springframework.context.annotation.Primary;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +14,7 @@ import java.util.HashMap;
 @Table(name="PRODUCT")
 @Getter
 @Setter
-public class Product {
+public class Product implements Comparable<Product>{
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -32,5 +30,17 @@ public class Product {
     String isbn;
     String price;
 
+    @Override
+    public int compareTo(Product o) {
+        //System.out.println(this.rating);
+        float thisRating = Float.parseFloat(this.rating);
+        float otherRating = Float.parseFloat(o.getRating());
+        if(thisRating > otherRating)
+            return -1;
+        else if(thisRating < otherRating)
+            return 1;
+        else
+            return 0;
 
+    }
 }

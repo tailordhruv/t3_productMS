@@ -1,9 +1,12 @@
-package com.coviam.bookstore.productMS.Service.impl;
+package com.coviam.bookstore.productMS.service.impl;
 
-import com.coviam.bookstore.productMS.Entity.Product;
-import com.coviam.bookstore.productMS.Repository.ProductRepository;
-import com.coviam.bookstore.productMS.Service.ProductService;
+import com.coviam.bookstore.productMS.entity.Product;
+import com.coviam.bookstore.productMS.repository.ProductRepository;
+import com.coviam.bookstore.productMS.service.ProductService;
+import org.apache.kafka.common.security.auth.Login;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,8 +22,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String addProduct(Product product) {
-
         return productRepository.save(product).getProductId();
+    }
+
+
+    ////////TODO     Add comparator
+    @Override
+    public ArrayList<Product> getTopProducts() {
+        ArrayList<Product> productList = (ArrayList<Product>) productRepository.findAll();
+        productList=(ArrayList<Product>)productList.stream().sorted().limit(20).collect(Collectors.toList());
+        //Page<Login> page= loginRepository.findAll(PageRequest.of(pageNumber, pageSize));
+        return productList;
     }
 
     @Override
@@ -37,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(String id) {
-        System.out.println(id);
+        System.out.println("------_>"+id);
         Optional<Product> o= productRepository.findById(id);
         System.out.println(o);
         return o.get();

@@ -1,6 +1,6 @@
-package com.coviam.bookstore.productMS.Repository;
+package com.coviam.bookstore.productMS.repository;
 
-import com.coviam.bookstore.productMS.Entity.Product;
+import com.coviam.bookstore.productMS.entity.Product;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

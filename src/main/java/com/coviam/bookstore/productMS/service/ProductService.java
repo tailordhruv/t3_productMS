@@ -1,6 +1,6 @@
-package com.coviam.bookstore.productMS.Service;
+package com.coviam.bookstore.productMS.service;
 
-import com.coviam.bookstore.productMS.Entity.Product;
+import com.coviam.bookstore.productMS.entity.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,4 +18,5 @@ public interface ProductService {
     List<String> getGenre();
 
     ArrayList<Product> getProductByGenre(String genre);
+    ArrayList<Product> getTopProducts();
 }

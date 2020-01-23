@@ -1,4 +1,4 @@
-package com.coviam.bookstore.productMS.DTO;
+package com.coviam.bookstore.productMS.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,21 +1,19 @@
-package com.coviam.bookstore.productMS.Controller;
+package com.coviam.bookstore.productMS.controller;
 
-import com.coviam.bookstore.productMS.DTO.ProductDTO1;
-import com.coviam.bookstore.productMS.DTO.ProductDTO2;
-import com.coviam.bookstore.productMS.DTO.ProductDTO3;
-import com.coviam.bookstore.productMS.DTO.Product_Merchant_DTO;
-import com.coviam.bookstore.productMS.Entity.Product;
-import com.coviam.bookstore.productMS.Service.ProductService;
+import com.coviam.bookstore.productMS.dto.ProductDTO1;
+import com.coviam.bookstore.productMS.dto.ProductDTO3;
+import com.coviam.bookstore.productMS.dto.SearchDTO;
+import com.coviam.bookstore.productMS.entity.Product;
+import com.coviam.bookstore.productMS.service.ProductService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -24,17 +22,36 @@ public class ProductController {
     private ProductService productService;
 
 
+    @Autowired
+    private KafkaTemplate<String, SearchDTO> kafkaTemplate;
+    private static final String TOPIC = "kafkaAdd";
 
-    
     @PostMapping("/addProduct")
     String addProduct(@RequestBody ProductDTO1 productDTO1){
         Product product = new Product();
         BeanUtils.copyProperties(productDTO1,product);
-        return productService.addProduct(product);
+        String response=productService.addProduct(product);
+        SearchDTO searchDto=new SearchDTO();
+        BeanUtils.copyProperties(productDTO1,searchDto);
+        kafkaTemplate.send(TOPIC, searchDto);
+        return response;
+    }
+
+    @GetMapping("/getTopProducts")
+    List<ProductDTO1> getTopProducts(){
+        List<ProductDTO1> listOfProductDTO = new ArrayList<ProductDTO1>();
+        List<Product> productList=productService.getTopProducts();
+        for(Product product:productList){
+            ProductDTO1 productDTO1=new ProductDTO1();
+            BeanUtils.copyProperties(product,productDTO1);
+            listOfProductDTO.add(productDTO1);
+        }
+        return listOfProductDTO;
+
     }
 
 
-    @DeleteMapping("/deleteProductById/{id}")
+    @DeleteMapping(value = "/deleteProductById/{id}")
     void deleteProductById(@PathVariable("id") String id){
 
         productService.deleteProductById(id);
@@ -45,8 +62,9 @@ public class ProductController {
 
     @GetMapping("/getProductById/{id}")
     ProductDTO1 getProductById(@PathVariable("id") String id){
-        System.out.println("called");
+        System.out.println("called---__>"+id);
         Product product=productService.getProductById(id);
+        System.out.println("Product :"+product);
         ProductDTO1 productDTO1=new ProductDTO1();
         BeanUtils.copyProperties(product,productDTO1);
         return productDTO1;
